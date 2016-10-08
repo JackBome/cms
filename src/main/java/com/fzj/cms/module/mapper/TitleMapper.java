@@ -3,6 +3,7 @@ package com.fzj.cms.module.mapper;
 import com.fzj.cms.module.pojo.Title;
 import com.fzj.cms.module.pojo.TitleExample;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface TitleMapper {
@@ -117,4 +118,5 @@ public interface TitleMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Title record);
+
 }

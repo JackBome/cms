@@ -2,9 +2,7 @@ package com.fzj.cms.module.controller;
 
 
 import com.fzj.cms.module.pojo.Admin;
-import com.fzj.cms.module.pojo.Title;
 import com.fzj.cms.module.service.AdminService;
-import com.fzj.cms.module.service.TitleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by j on 2016/9/26.
  */
 @Controller
-@RequestMapping("/adminController")
+@RequestMapping("/admin")
 public class AdminController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
@@ -29,12 +30,18 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @RequestMapping(value="list",method = RequestMethod.GET)
+    public String list(Model model){
+        List<Admin> adminList =adminService.queryAllAdmin();
+        model.addAttribute("adminList",adminList);
+        return "list";
+    }
 
     @RequestMapping("/showAdminToJspById/{adminId}")
     public String showAdmin(Model model, @PathVariable("adminId") Integer adminId){
         Admin admin =this.adminService.getById(adminId);
         model.addAttribute("admin",admin);
-        return "showAdmin";
+        return "/admin/showAdmin";
     }
 
     @RequestMapping("/showAdminToJsonById/{adminId}")
@@ -44,20 +51,37 @@ public class AdminController {
         return admin;
     }
 
-    @RequestMapping("/findAllAdmin")
-    public String findAllAdmin(Model model)throws Exception{
-        List<Admin> admins =this.adminService.findAllAdmin();
-        model.addAttribute("admins",admins);
-        return "showAllAdmin";
+    @RequestMapping("/delete/{adminId}")
+    public String delete(@PathVariable("adminId") Integer adminId){
+        this.adminService.deleteAdmin(adminId);
+        //redirect跳转的时候加上命名空间
+        return "redirect:/admin/list";
     }
-    @RequestMapping("/find")
-    @ResponseBody
-    public List<Admin> findAllAdminToJson() throws Exception{
-        List<Admin> admins =adminService.findAllAdmin();
-        return admins;
+
+    @RequestMapping("/updateUI/{adminId}")
+    public String updateUI(@PathVariable("adminId") Integer adminId, HttpServletRequest request){
+        request.setAttribute("adminId",adminId);
+        return "updateUI";
+    }
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    public String update(Admin admin){
+        System.out.print(admin);
+        adminService.updateAdmin(admin);
+        return "redirect:/admin/list";
+    }
+
+    @RequestMapping("addUI")
+    public String addUI(){
+        return "addUI";
     }
 
 
+    @RequestMapping(value = "add",method = RequestMethod.POST)
+    public String add(Admin admin){
+        adminService.inserAdmin(admin);
+        return "redirect:/admin/list";
+    }
 
 
 

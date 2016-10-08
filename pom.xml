@@ -56,6 +56,7 @@
     <httpclient.version>4.3.3</httpclient.version>
     <jackson-databind.version>2.4.2</jackson-databind.version>
     <fastjson.version>1.1.43</fastjson.version>
+
     <!--架包版本变量 end-->
 
     <!--插件版本变量 start-->
@@ -311,12 +312,14 @@
     <!-- 日志文件管理包 end -->
 
 
+
     <!--JSON处理-->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>${jackson-databind.version}</version>
     </dependency>
+
 
     <!-- 上传组件包 -->
     <dependency>
